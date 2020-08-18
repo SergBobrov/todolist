@@ -25,7 +25,6 @@ function App() {
 
     return (
         <div className="App">
-            <h1>todo</h1>
             <TodoList title={"What to learn"} tasks={jsTasks} />
             <TodoList title={"Pets"} tasks={petsTasks}/>
         </div>
