@@ -3,13 +3,15 @@ import {FilterValuesType, TaskType} from "./App";
 
 
 type PropsType = {
+    id: string
     title: string
     filter: FilterValuesType
     tasks: Array<TaskType>
-    removeTask: (taskId: string) => void
-    changeFilter: (value: FilterValuesType) => void
-    setTask: (t: string) => void
-    changeStatus: (taskID: string, isDone: boolean) => void
+    removeTask: (taskId: string, todoListID: string) => void
+    changeFilter: (value: FilterValuesType, toDoListID: string) => void
+    setTask: (t: string, todoListID: string) => void
+    changeStatus: (taskID: string, isDone: boolean, todoListID: string) => void
+    removeToDoList: (s: string) => void
 
 }
 
@@ -19,7 +21,7 @@ export function TodoList(props: PropsType) {
 
     const addTask = () => {
         if (title) {
-            props.setTask(title.trim());
+            props.setTask(title.trim(), props.id);
             setTitle("");
         } else {
             setError("Title is required!");
@@ -38,15 +40,19 @@ export function TodoList(props: PropsType) {
     };
 
     const onAllClickHendler = () => {
-        props.changeFilter("all")
+        props.changeFilter("all", props.id)
     };
 
     const onActiveClickHendler = () => {
-        props.changeFilter("active")
+        props.changeFilter("active", props.id)
     };
 
     const onConpletedClickHendler = () => {
-        props.changeFilter("completed")
+        props.changeFilter("completed", props.id)
+    };
+
+    const deleteTask = () => {
+        props.removeToDoList(props.id);
     };
 
     return (
@@ -67,11 +73,11 @@ export function TodoList(props: PropsType) {
             <ul>
                 {
                     props.tasks.map(t => {
-                            const removeTask = () => props.removeTask(t.id)
+                            const removeTask = () => props.removeTask(t.id, props.id)
 
                             const changeStatus = (e: ChangeEvent<HTMLInputElement>) => {
 
-                                props.changeStatus(t.id, e.currentTarget.checked)
+                                props.changeStatus(t.id, e.currentTarget.checked, props.id)
                             };
 
                             return (
@@ -105,6 +111,7 @@ export function TodoList(props: PropsType) {
                     onClick={onConpletedClickHendler}>Completed
                 </button>
             </div>
+            <button onClick={deleteTask}>delete task</button>
         </div>
     );
 }
