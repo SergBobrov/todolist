@@ -6,7 +6,7 @@ import {
     RemoveTodolistAC,
     todolistsReducer
 } from "./todolist-reducer";
-import {FilterValuesType, ToDoListType} from "../App";
+import {FilterValuesType, TasksStateType, ToDoListType} from "../App";
 
 test('correct todolist should be removed', () => {
     let todolistId1 = v1();
@@ -59,6 +59,8 @@ test('correct todolist should change its name', () => {
         title: newTodolistTitle
     };
     const endState = todolistsReducer(startState, ChangeTodolistTitleAC(action.id, action.title));
+
+
     expect(endState[0].title).toBe("What to learn");
     expect(endState[1].title).toBe(newTodolistTitle);
 });
@@ -86,3 +88,6 @@ test('correct filter of todolist should be changed', () => {
     expect(endState[0].filter).toBe("all");
     expect(endState[1].filter).toBe(newFilter);
 });
+
+
+

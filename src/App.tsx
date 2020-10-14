@@ -9,7 +9,7 @@ import Typography from "@material-ui/core/Typography";
 import {Menu} from "@material-ui/icons";
 
 
-export type TaskType = {
+type TaskType = {
     id: string
     title: string
     isDone: boolean
@@ -23,7 +23,7 @@ export type ToDoListType = {
     filter: FilterValuesType;
 }
 
-type TasksStateType = {
+export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
