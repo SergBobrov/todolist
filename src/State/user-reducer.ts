@@ -1,68 +1,35 @@
-import {TasksStateType} from "../App";
-import {v1} from "uuid";
-import {AddTodolistAC, RemoveTodolistAC} from "./todolist-reducer";
+type StateType = {
+    age: number
+    childrenCount: number
+    name: string
+}
+type ActionType = {
+    type: string
+    [key: string]: any
+}
 
-export type ActionType = ReturnType<typeof removeTaskAC>
-    | ReturnType<typeof addTaskAC>
-    | ReturnType<typeof changeTaskStatusAC>
-    | ReturnType<typeof AddTodolistAC>
-    | ReturnType<typeof changeTaskTitleAC>
-    | ReturnType<typeof RemoveTodolistAC>
-
-
-export const tasksReducer = (state: TasksStateType, action: ActionType) => {
+// меня вызовут и дадут мне стейт (почти всегда объект)
+// и инструкцию (action, тоже объект)
+// согласно прописаному type в этом action (инструкции) я поменяю state
+export const userReducer = (state: StateType, action: ActionType) => {
     switch (action.type) {
-        case 'REMOVE-TASK':
-            let copyState = {...state}
-            copyState[action.todolistId] = copyState[action.todolistId].filter(t => t.id != action.taskID)
-            return copyState
-        case 'ADD-TASK':
-            let newTask = {id: v1(), title: action.title, isDone: false}
-            return {...state, [action.todolistId]: [...state[action.todolistId], newTask]}
-
-        case 'CHANGE-TASK':
-            let toDolistTasks = state[action.todolistId]
-            let task = toDolistTasks.find(t => t.id === action.taskID);
-            if (task) {
-                task.isDone = action.isDone;
-            }
-            return {...state, [action.todolistId]: toDolistTasks}
-        case 'CHANGE-TITLE': {
-            let toDolistTasks = state[action.todolistId]
-            let task = toDolistTasks.find(t => t.id === action.taskID);
-            if (task) {
-                task.title = action.title;
-            }
-            return {...state, [action.todolistId]: toDolistTasks}
-        }
-        case 'ADD-TODOLIST': {
-            let id = action.todolistId
-            return {...state, [id]: []}
-        }
-        case 'REMOVE-TODOLIST': {
-            let copyState = {...state}
-            delete copyState[action.id]
-            return copyState
-        }
+        case 'INCREMENT-AGE':
+            let newState = {...state};//делаем копию
+            newState.age = state.age + 1;// у копии имеем право менять св-во
+            return newState;//возвращаем копию
+        case 'INCREMENT-CHILDREN-COUNT':
+            // а можно без создания переменных промежуточных (делайте, как вам понятнее)
+            return {
+                ...state,
+                childrenCount: state.childrenCount + 1
+            };
+        case 'CHANGE-NAME':
+            // а можно без  создания переменных промежуточных (делайте, как вам понятнее)
+            return {
+                ...state,
+                name: action.newName
+            };
         default:
             throw new Error("I don't understand this type")
     }
-
 }
-
-export const removeTaskAC = (taskID: string, todolistId: string) => {
-    return {type: 'REMOVE-TASK', taskID: taskID, todolistId: todolistId} as const
-};
-
-export const addTaskAC = (title: string, todolistId: string) => {
-    return {type: 'ADD-TASK', title: title, todolistId: todolistId} as const
-};
-
-export const changeTaskStatusAC = (taskID: string, isDone: boolean, todolistId: string) => {
-    return {type: 'CHANGE-TASK', taskID: taskID, isDone: isDone, todolistId: todolistId} as const
-};
-
-export const changeTaskTitleAC = (taskID: string, title: string, todolistId: string) => {
-    return {type: 'CHANGE-TITLE', taskID: taskID, title: title, todolistId: todolistId} as const
-};
-
